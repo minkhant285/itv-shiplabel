@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { ICustomer } from '../../components/customer/customer.model';
-import { api_CreateNewCustomer, api_deleteCustomer, api_getCustomersData, api_searchCustomerByName } from '../../apis/customer.api';
+import { api_CreateNewCustomer, api_deleteCustomer, api_getCustomersData, api_searchCustomerByName, api_searchCustomerByPhone } from '../../apis/customer.api';
 
 const initialState: {
     loading: boolean;
@@ -47,6 +47,17 @@ export const customerSlice = createSlice({
                 state.loading = false;
                 state.customers = action.payload.data
             }).addCase(api_searchCustomerByName.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || 'An error occured';
+            })
+            .addCase(api_searchCustomerByPhone.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(api_searchCustomerByPhone.fulfilled, (state, action) => {
+                state.loading = false;
+                state.customers = action.payload.data
+            }).addCase(api_searchCustomerByPhone.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || 'An error occured';
             })

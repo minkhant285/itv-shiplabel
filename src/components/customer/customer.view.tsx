@@ -1,15 +1,11 @@
 
 import useCustomerController from "./customer.controller";
-import React, { useRef } from 'react';
+import React from 'react';
 import { ICustomer } from "./customer.model";
-import { useReactToPrint } from 'react-to-print';
-import { ComponentToPrint } from "./printComponent";
+import CustomerPrintView from "./customer.print.view";
 
 const CustomerInputForm: React.FC = () => {
-    const componentRef = useRef<HTMLDivElement>(null);
-    const handlePrint = useReactToPrint({
-        content: () => componentRef.current,
-    });
+
 
     const {
         handleSubmit,
@@ -27,14 +23,9 @@ const CustomerInputForm: React.FC = () => {
         selectedCus,
         handleUpdate,
         resetForm,
-        headerChecked,
-        deliChecked,
-        setDelicheck,
-        setHdcheck,
-        codAmount,
-        setCodAmount,
-        remark,
-        setRemark
+        searchPhone,
+        setSearchPhone,
+        getCusByPhone
     } = useCustomerController();
 
     return (
@@ -93,8 +84,10 @@ const CustomerInputForm: React.FC = () => {
                         <h2>
                             Customers
                         </h2>
-                        <input type="text" placeholder="Search customer" name="search" value={serachName} onChange={(e) => setSearchName(e.target.value)} /><br />
-                        <button onClick={() => getCusByName()}>Search</button>
+                        <input type="text" placeholder="Search customer by Name" name="search" value={serachName} onChange={(e) => setSearchName(e.target.value)} /><br />
+                        <input type="text" placeholder="Search customer by Phone Number" name="phsearch" value={searchPhone} onChange={(e) => setSearchPhone(e.target.value)} /><br />
+                        <button onClick={() => getCusByName()}>Search Name</button>
+                        <button onClick={() => getCusByPhone()}>Search Phone</button>
                         <button onClick={() => getAllCus()}>refresh</button>
                         {
                             customers && customers.map((cus: ICustomer, index: number) => <div style={{ display: 'flex', marginTop: '10px', flexDirection: 'column' }} key={index}>
@@ -108,39 +101,7 @@ const CustomerInputForm: React.FC = () => {
                         }
                     </div>
             }
-            {selectedCus && <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <h2>Print Customer</h2>
-                <ComponentToPrint ref={componentRef} props={
-                    <div style={{ flex: 1, padding: '10px', display: 'flex', flexDirection: 'column' }}>
-                        {headerChecked && <h3>ITVerse</h3>}
-                        <span>{selectedCus.name}</span>
-                        <span>{selectedCus.phone}</span>
-                        <span>{selectedCus.address}</span>
-                        {codAmount && <span>{codAmount} Kyat</span>}
-                        {deliChecked && <span>Deli ခကောက်ရန်</span>}
-                        {
-                            remark && <span>{remark}</span>
-                        }
-                    </div>
-                } />
-
-                <div style={{ display: 'flex' }}>
-                    <input id="hdcb" type="checkbox" checked={headerChecked} onChange={() => setHdcheck(!headerChecked)} />
-                    <label htmlFor="hdcb" >Show Header</label>
-                </div>
-                <div style={{ display: 'flex' }}>
-                    <input id="deli" type="checkbox" checked={deliChecked} onChange={() => setDelicheck(!deliChecked)} />
-                    <label htmlFor="deli" >delivery charges</label>
-                </div>
-                <input type="text"
-                    placeholder="COD Amount"
-                    value={codAmount}
-                    onChange={(e) => setCodAmount(e.target.value)}
-                    style={{ marginBottom: '10px' }} />
-
-                <textarea placeholder="Remark" value={remark} onChange={(e) => setRemark(e.target.value)} />
-                <button style={{ marginTop: '10px' }} onClick={handlePrint}>Print Label</button>
-            </div>}
+            {selectedCus && <CustomerPrintView selectedCus={selectedCus} />}
         </div>
     );
 };

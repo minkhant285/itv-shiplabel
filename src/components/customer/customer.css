@@ -1,0 +1,26 @@
+.print-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.print-section-container {
+    flex: 1;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    width: 284px
+}
+
+.cusinfo-text {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.cusinfo-text-small {
+    font-weight: bold;
+    font-size: 1em;
+}
+
+h2 {
+    align-self: center;
+}

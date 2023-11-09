@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { editCustomer, removeCustomer } from "../../redux/slicers/customerslice";
 import { ICustomer, ICustomerInput } from "./customer.model";
 import { AppDispatch, RootState } from "../../redux/store";
-import { api_CreateNewCustomer, api_getCustomersData, api_searchCustomerByName, api_updateCustomer } from "../../apis/customer.api";
+import { api_CreateNewCustomer, api_getCustomersData, api_searchCustomerByName, api_searchCustomerByPhone, api_updateCustomer } from "../../apis/customer.api";
 
 const cusInput: ICustomerInput = {
     name: '',
@@ -23,6 +23,7 @@ export default function useCustomerController() {
     const [deliChecked, setDelicheck] = useState<boolean>(false);
     const [codAmount, setCodAmount] = useState<string>();
     const [remark, setRemark] = useState<string>();
+    const [searchPhone, setSearchPhone] = useState<string>('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -75,8 +76,12 @@ export default function useCustomerController() {
     }
 
     const getCusByName = () => {
-        dispatch(api_searchCustomerByName(serachName));
+        dispatch(api_searchCustomerByName(serachName.trim()));
         // console.log('Searched Name', customers.find((cus) => cus.name === serachName.trim()))
+    }
+    const getCusByPhone = () => {
+        dispatch(api_searchCustomerByPhone(searchPhone.trim()));
+        resetForm()
     }
 
 
@@ -110,6 +115,9 @@ export default function useCustomerController() {
         codAmount,
         setCodAmount,
         remark,
-        setRemark
+        setRemark,
+        searchPhone,
+        setSearchPhone,
+        getCusByPhone
     };
 }

@@ -42,6 +42,19 @@ export const api_searchCustomerByName = createAsyncThunk(
         }
     });
 
+export const api_searchCustomerByPhone = createAsyncThunk(
+    'customer/searchCustomerbyphone', async (phone: string) => {
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: `http://192.168.100.229:4000/api/customer/s/p/${phone}`
+            });
+            return response.data;
+        } catch (error) {
+            console.error(error);
+        }
+    });
+
 
 export async function api_updateCustomer(cusData: ICustomer | null) {
     if (cusData !== null) {
