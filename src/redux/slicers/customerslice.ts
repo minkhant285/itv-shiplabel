@@ -1,6 +1,7 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice, isAnyOf } from '@reduxjs/toolkit'
 import { ICustomer } from '../../components/customer/customer.model';
 import { api_CreateNewCustomer, api_deleteCustomer, api_getCustomersData, api_searchCustomerByName, api_searchCustomerByPhone } from '../../apis/customer.api';
+import { ITV_RDX_ACTIONS } from '../actions';
 
 const initialState: {
     loading: boolean;
@@ -17,47 +18,52 @@ export const customerSlice = createSlice({
     initialState,
     extraReducers: (builder) => {
         builder
-            .addCase(api_getCustomersData.pending, (state) => {
+            .addMatcher(isAnyOf(
+                api_getCustomersData.fulfilled,
+                api_searchCustomerByPhone.fulfilled,
+                api_CreateNewCustomer.fulfilled,
+                api_searchCustomerByName.fulfilled
+            ), (state, action) => {
+                state.loading = false;
+                let realType = action.type.split('/').slice(0, -1).join('/').toString();
+                console.log(realType)
+                switch (realType) {
+                    case ITV_RDX_ACTIONS.GET_ALL_CUSTOMERS:
+                        state.customers = action.payload.data;
+                        break;
+
+                    case ITV_RDX_ACTIONS.SEARCH_CUSTOMER_PHONE:
+                        state.customers = action.payload.data;
+                        break;
+
+                    case ITV_RDX_ACTIONS.SEARCH_CUSTOMER_NAME:
+                        state.customers = action.payload.data;
+                        break;
+                    case ITV_RDX_ACTIONS.CREATE_CUSTOMER:
+                        state.customers = [...state.customers, action.payload.data];
+                        break;
+
+                    default:
+                        state.customers = action.payload.data;
+                        break;
+
+                }
+            })
+            .addMatcher(isAnyOf(
+                api_searchCustomerByPhone.pending,
+                api_getCustomersData.pending,
+                api_CreateNewCustomer.pending,
+                api_searchCustomerByName.pending
+            ), (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(api_getCustomersData.fulfilled, (state, action) => {
-                state.loading = false;
-                state.customers = action.payload.data;
-            }).addCase(api_getCustomersData.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message || 'An error occured';
-            })
-            .addCase(api_CreateNewCustomer.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(api_CreateNewCustomer.fulfilled, (state, action) => {
-                state.loading = false;
-                state.customers = [...state.customers, action.payload.data]
-            }).addCase(api_CreateNewCustomer.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message || 'An error occured';
-            })
-            .addCase(api_searchCustomerByName.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(api_searchCustomerByName.fulfilled, (state, action) => {
-                state.loading = false;
-                state.customers = action.payload.data
-            }).addCase(api_searchCustomerByName.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message || 'An error occured';
-            })
-            .addCase(api_searchCustomerByPhone.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(api_searchCustomerByPhone.fulfilled, (state, action) => {
-                state.loading = false;
-                state.customers = action.payload.data
-            }).addCase(api_searchCustomerByPhone.rejected, (state, action) => {
+            .addMatcher(isAnyOf(
+                api_searchCustomerByPhone.rejected,
+                api_searchCustomerByName.rejected,
+                api_CreateNewCustomer.rejected,
+                api_getCustomersData.rejected
+            ), (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || 'An error occured';
             })

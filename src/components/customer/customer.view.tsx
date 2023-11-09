@@ -90,6 +90,7 @@ const CustomerInputForm: React.FC = () => {
                         <button onClick={() => getCusByPhone()}>Search Phone</button>
                         <button onClick={() => getAllCus()}>refresh</button>
                         {
+                            // JSON.stringify(customers)
                             customers && customers.map((cus: ICustomer, index: number) => <div style={{ display: 'flex', marginTop: '10px', flexDirection: 'column' }} key={index}>
                                 <span>{index + 1}.{cus.name}</span>
                                 <div>

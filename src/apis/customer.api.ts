@@ -1,10 +1,11 @@
 import axios from "axios";
 import { ICustomer, ICustomerInput } from "../components/customer/customer.model";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { ITV_RDX_ACTIONS } from "../redux/actions";
 
 
 export const api_getCustomersData = createAsyncThunk(
-    'customers/getCustomers', async () => {
+    ITV_RDX_ACTIONS.GET_ALL_CUSTOMERS, async () => {
         try {
             const response = await axios.get("http://192.168.100.229:4000/api/customers");
             return response.data;
@@ -16,7 +17,7 @@ export const api_getCustomersData = createAsyncThunk(
 
 
 export const api_CreateNewCustomer = createAsyncThunk(
-    'customer/createCustomer', async (customerData: ICustomerInput) => {
+    ITV_RDX_ACTIONS.CREATE_CUSTOMER, async (customerData: ICustomerInput) => {
         try {
             const response = await axios({
                 method: 'POST',
@@ -30,7 +31,7 @@ export const api_CreateNewCustomer = createAsyncThunk(
     });
 
 export const api_searchCustomerByName = createAsyncThunk(
-    'customer/searchCustomer', async (cusName: string) => {
+    ITV_RDX_ACTIONS.SEARCH_CUSTOMER_NAME, async (cusName: string) => {
         try {
             const response = await axios({
                 method: 'GET',
@@ -43,7 +44,7 @@ export const api_searchCustomerByName = createAsyncThunk(
     });
 
 export const api_searchCustomerByPhone = createAsyncThunk(
-    'customer/searchCustomerbyphone', async (phone: string) => {
+    ITV_RDX_ACTIONS.SEARCH_CUSTOMER_PHONE, async (phone: string) => {
         try {
             const response = await axios({
                 method: 'GET',
