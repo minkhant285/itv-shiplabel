@@ -7,42 +7,27 @@ import CustomerPrintView from "./customer.print.view";
 const CustomerInputForm: React.FC = () => {
 
 
-    const {
-        handleSubmit,
-        handleChange,
-        formData,
-        customers,
-        deleteCus,
-        getAllCus,
-        getCusByName,
-        serachName,
-        setSearchName,
-        loading,
-        error,
-        selectCus,
-        selectedCus,
-        handleUpdate,
-        resetForm,
-        searchPhone,
-        setSearchPhone,
-        getCusByPhone
-    } = useCustomerController();
+    const customerController = useCustomerController();
+    function generateArray(length: number, initialValue = 0) {
+        // Using Array.from to create an array with the specified length
+        return Array.from({ length }, (_, index) => initialValue + index);
+    }
 
     return (
         <div style={{ display: 'flex' }}>
-            {error && <h2 style={{ color: 'red' }}>Error</h2>}
+            {customerController.error && <h2 style={{ color: 'red' }}>Error</h2>}
 
             <div>
                 <h2>Customer Create Form</h2>
-                <form onSubmit={selectedCus?.id ? handleUpdate : handleSubmit}>
+                <form onSubmit={customerController.selectedCus?.id ? customerController.handleUpdate : customerController.handleSubmit}>
                     <div>
                         <label htmlFor='name1'>Name:</label>
                         <input
                             id='name1'
                             type="text"
                             name="name"
-                            value={formData.name}
-                            onChange={handleChange}
+                            value={customerController.formData.name}
+                            onChange={customerController.handleChange}
                             required
                             autoComplete='name'
                         />
@@ -53,8 +38,8 @@ const CustomerInputForm: React.FC = () => {
                             id='phone'
                             type="tel"
                             name="phone"
-                            value={formData.phone}
-                            onChange={handleChange}
+                            value={customerController.formData.phone}
+                            onChange={customerController.handleChange}
                             required
                             autoComplete='phone'
                         />
@@ -64,46 +49,56 @@ const CustomerInputForm: React.FC = () => {
                         <textarea
                             id='add'
                             name="address"
-                            value={formData.address}
-                            onChange={handleChange}
+                            value={customerController.formData.address}
+                            onChange={customerController.handleChange}
                             required
                             autoComplete='address'
                         />
                     </div>
                     <div>
-                        <button type="submit">{selectedCus?.id ? 'Update' : 'Create'}</button>
+                        <button type="submit">{customerController.selectedCus?.id ? 'Update' : 'Create'}</button>
                     </div>
                 </form>
-                {selectedCus && <button onClick={resetForm}>Reset</button>}
+                {customerController.selectedCus && <button onClick={customerController.resetForm}>Reset</button>}
 
 
             </div>
             {
-                loading ? <h2>loading....</h2> :
+                customerController.loading ? <h2>loading....</h2> :
                     <div style={{ marginLeft: '10px' }}>
                         <h2>
                             Customers
                         </h2>
-                        <input type="text" placeholder="Search customer by Name" name="search" value={serachName} onChange={(e) => setSearchName(e.target.value)} /><br />
-                        <input type="text" placeholder="Search customer by Phone Number" name="phsearch" value={searchPhone} onChange={(e) => setSearchPhone(e.target.value)} /><br />
-                        <button onClick={() => getCusByName()}>Search Name</button>
-                        <button onClick={() => getCusByPhone()}>Search Phone</button>
-                        <button onClick={() => getAllCus()}>refresh</button>
+                        <input type="text" placeholder="Search customer by Name" name="search" value={customerController.serachName} onChange={(e) => customerController.setSearchName(e.target.value)} /><br />
+                        <input type="text" placeholder="Search customer by Phone Number" name="phsearch" value={customerController.searchPhone} onChange={(e) => customerController.setSearchPhone(e.target.value)} /><br />
+                        <button onClick={() => customerController.getCusByName()}>Search Name</button>
+                        <button onClick={() => customerController.getCusByPhone()}>Search Phone</button>
+                        <button onClick={() => customerController.getAllCus(0)}>refresh</button>
+                        <div>Total Customers:{customerController.numOfCus}</div>
                         {
                             // JSON.stringify(customers)
-                            customers && customers.map((cus: ICustomer, index: number) => <div style={{ display: 'flex', marginTop: '10px', flexDirection: 'column' }} key={index}>
+                            customerController.customers && customerController.customers.map((cus: ICustomer, index: number) => <div style={{ display: 'flex', marginTop: '10px', flexDirection: 'column' }} key={index}>
                                 <span>{index + 1}.{cus.name}</span>
                                 <div>
-                                    <button style={{ backgroundColor: 'red' }} onClick={() => deleteCus(cus.id)}>Delete</button>
+                                    <button style={{ backgroundColor: 'red' }} onClick={() => customerController.deleteCus(cus.id)}>Delete</button>
 
-                                    <button onClick={() => selectCus(cus)} style={{ backgroundColor: 'blue' }}>Select</button>
+                                    <button onClick={() => customerController.selectCus(cus)} style={{ backgroundColor: 'blue' }}>Select</button>
                                 </div>
                             </div>)
                         }
+                        {
+                            <div>{generateArray(Math.ceil(customerController.numOfCus / customerController.take), 1).map((val, index) =>
+                                <button key={val} style={{ margin: '2.5px', marginTop: '10px', backgroundColor: customerController.take * index === customerController.skip ? 'red' : '' }} onClick={() => {
+                                    customerController.getAllCus(customerController.take * index);
+                                    customerController.setSkip(customerController.take * index);
+                                }}>{val}</button>)}
+                            </div>
+
+                        }
                     </div>
             }
-            {selectedCus && <CustomerPrintView selectedCus={selectedCus} />}
-        </div>
+            {customerController.selectedCus && <CustomerPrintView selectedCus={customerController.selectedCus} />}
+        </div >
     );
 };
 

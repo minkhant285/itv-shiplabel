@@ -7,10 +7,12 @@ const initialState: {
     loading: boolean;
     error: string | null;
     customers: ICustomer[] | [];
+    numOfCus: number;
 } = {
     loading: false,
     error: null,
-    customers: []
+    customers: [],
+    numOfCus: 0
 };
 
 export const customerSlice = createSlice({
@@ -26,10 +28,11 @@ export const customerSlice = createSlice({
             ), (state, action) => {
                 state.loading = false;
                 let realType = action.type.split('/').slice(0, -1).join('/').toString();
-                console.log(realType)
+                // console.log(realType)
                 switch (realType) {
                     case ITV_RDX_ACTIONS.GET_ALL_CUSTOMERS:
-                        state.customers = action.payload.data;
+                        state.customers = action.payload.data.customers;
+                        state.numOfCus = action.payload.data.totalCus;
                         break;
 
                     case ITV_RDX_ACTIONS.SEARCH_CUSTOMER_PHONE:
@@ -41,6 +44,7 @@ export const customerSlice = createSlice({
                         break;
                     case ITV_RDX_ACTIONS.CREATE_CUSTOMER:
                         state.customers = [...state.customers, action.payload.data];
+                        state.numOfCus = state.numOfCus + 1;
                         break;
 
                     default:

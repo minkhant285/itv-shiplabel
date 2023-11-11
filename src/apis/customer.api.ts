@@ -5,9 +5,10 @@ import { ITV_RDX_ACTIONS } from "../redux/actions";
 
 
 export const api_getCustomersData = createAsyncThunk(
-    ITV_RDX_ACTIONS.GET_ALL_CUSTOMERS, async () => {
+    ITV_RDX_ACTIONS.GET_ALL_CUSTOMERS, async (reqParams: { take: number, skip: number }) => {
         try {
-            const response = await axios.get("http://192.168.100.229:4000/api/customers");
+            const response = await axios.get(`http://192.168.100.229:4000/api/customers/${reqParams.take}/${reqParams.skip}`);
+
             return response.data;
         } catch (error) {
             console.error('Error fetching Data: ', error);

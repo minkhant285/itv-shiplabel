@@ -13,7 +13,7 @@ const cusInput: ICustomerInput = {
 };
 export default function useCustomerController() {
 
-    const { customers, loading, error } = useSelector((cus: RootState) => cus.customerReducer);
+    const { customers, loading, error, numOfCus } = useSelector((cus: RootState) => cus.customerReducer);
     const dispatch: AppDispatch = useDispatch();
     const [serachName, setSearchName] = useState<string>('');
     const [selectedCus, setSelectedCus] = useState<ICustomer>();
@@ -24,6 +24,8 @@ export default function useCustomerController() {
     const [codAmount, setCodAmount] = useState<string>();
     const [remark, setRemark] = useState<string>();
     const [searchPhone, setSearchPhone] = useState<string>('');
+    const [skip, setSkip] = useState<number>(0);
+    const take = 10;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -69,9 +71,9 @@ export default function useCustomerController() {
         dispatch(removeCustomer(id));
     }
 
-    const getAllCus = () => {
-        console.log('All Cus', customers);
-        dispatch(api_getCustomersData());
+    const getAllCus = (skipper: number) => {
+        // console.log('All Cus', customers);
+        dispatch(api_getCustomersData({ take, skip: skipper }));
 
     }
 
@@ -87,7 +89,7 @@ export default function useCustomerController() {
 
     useEffect(() => {
         if (customers.length < 1) {
-            dispatch(api_getCustomersData());
+            dispatch(api_getCustomersData({ take, skip }));
         }
     }, [])
 
@@ -118,6 +120,10 @@ export default function useCustomerController() {
         setRemark,
         searchPhone,
         setSearchPhone,
-        getCusByPhone
+        getCusByPhone,
+        numOfCus,
+        take,
+        skip,
+        setSkip
     };
 }
