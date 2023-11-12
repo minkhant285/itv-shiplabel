@@ -76,7 +76,15 @@ const CustomerInputForm: React.FC = () => {
                         <button onClick={() => customerController.getAllCus(0)}>refresh</button>
                         <div>Total Customers:{customerController.numOfCus}</div>
                         {
-                            // JSON.stringify(customers)
+                            <div>{generateArray(Math.ceil(customerController.numOfCus / customerController.take), 1).map((val, index) =>
+                                <button key={val} style={{ margin: '2.5px', marginTop: '10px', backgroundColor: customerController.take * index === customerController.skip ? 'red' : '' }} onClick={() => {
+                                    customerController.getAllCus(customerController.take * index);
+                                    customerController.setSkip(customerController.take * index);
+                                }}>{val}</button>)}
+                            </div>
+
+                        }
+                        {
                             customerController.customers && customerController.customers.map((cus: ICustomer, index: number) => <div style={{ display: 'flex', marginTop: '10px', flexDirection: 'column' }} key={index}>
                                 <span>{index + 1}.{cus.name}</span>
                                 <div>
@@ -86,15 +94,7 @@ const CustomerInputForm: React.FC = () => {
                                 </div>
                             </div>)
                         }
-                        {
-                            <div>{generateArray(Math.ceil(customerController.numOfCus / customerController.take), 1).map((val, index) =>
-                                <button key={val} style={{ margin: '2.5px', marginTop: '10px', backgroundColor: customerController.take * index === customerController.skip ? 'red' : '' }} onClick={() => {
-                                    customerController.getAllCus(customerController.take * index);
-                                    customerController.setSkip(customerController.take * index);
-                                }}>{val}</button>)}
-                            </div>
 
-                        }
                     </div>
             }
             {customerController.selectedCus && <CustomerPrintView selectedCus={customerController.selectedCus} />}
