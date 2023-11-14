@@ -3,7 +3,6 @@ import useCustomerController from "./customer.controller";
 import React from 'react';
 import { ICustomer } from "./customer.model";
 import CustomerPrintView from "./customer.print.view";
-import { envLoader } from "../../utils/envloader";
 
 const CustomerInputForm: React.FC = () => {
 
