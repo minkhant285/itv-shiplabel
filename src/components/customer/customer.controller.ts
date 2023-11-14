@@ -26,6 +26,9 @@ export default function useCustomerController() {
     const [searchPhone, setSearchPhone] = useState<string>('');
     const [skip, setSkip] = useState<number>(0);
     const take = 10;
+    const [openModal, setModal] = useState(false);
+    const [openPrintView, setPrintView] = useState(false);
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -49,6 +52,7 @@ export default function useCustomerController() {
         }
         setFormData(cusInput);
         setSelectedCus(undefined);
+        setModal(false);
     }
 
     const selectCus = (cus: ICustomer) => {
@@ -65,6 +69,8 @@ export default function useCustomerController() {
         e.preventDefault();
         dispatch(api_CreateNewCustomer(formData));
         setFormData(cusInput);
+        resetForm();
+        setModal(false);
     };
 
     const deleteCus = (id: string) => {
@@ -124,6 +130,10 @@ export default function useCustomerController() {
         numOfCus,
         take,
         skip,
-        setSkip
+        setSkip,
+        openModal,
+        setModal,
+        openPrintView,
+        setPrintView
     };
 }

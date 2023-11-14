@@ -53,7 +53,6 @@ const CustomerPrintView: React.FC<{ selectedCus: ICustomer }> = ({ selectedCus }
 
     return (
         <div className='print-container'>
-            <h2>Print Customer</h2>
             <ComponentToPrint ref={componentRef} props={
                 <div className='print-section-container'>
                     {headerChecked && <span style={{ marginBottom: '5px', fontSize: '1.5em', fontWeight: 'bold', fontFamily: 'cursive', alignSelf: 'center' }}>ITVerse</span>}
@@ -160,7 +159,7 @@ const CustomerPrintView: React.FC<{ selectedCus: ICustomer }> = ({ selectedCus }
                 onChange={(e) => setCodAmount(e.target.value)}
                 style={{ marginBottom: '10px' }} />
 
-            <textarea placeholder="Remark" value={remark} onChange={(e) => setRemark(e.target.value)} />
+            <textarea rows={10} placeholder="Remark" value={remark} onChange={(e) => setRemark(e.target.value)} />
             <button style={{ marginTop: '10px' }} onClick={handlePrint}>Print Label</button>
             <button onClick={handleDownloadImage}>Capture Image</button>
         </div>
