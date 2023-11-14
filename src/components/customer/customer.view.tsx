@@ -3,6 +3,7 @@ import useCustomerController from "./customer.controller";
 import React from 'react';
 import { ICustomer } from "./customer.model";
 import CustomerPrintView from "./customer.print.view";
+import { envLoader } from "../../utils/envloader";
 
 const CustomerInputForm: React.FC = () => {
 
@@ -67,7 +68,6 @@ const CustomerInputForm: React.FC = () => {
                     </div>
                 </div>
             </ModalView>}
-
             <button onClick={() => { customerController.resetForm(); customerController.setModal(true); }}>Add New</button>
             <div style={{ display: 'flex' }}>
                 {customerController.error && <h2 style={{ color: 'red' }}>Error</h2>}

@@ -2,12 +2,13 @@ import axios from "axios";
 import { ICustomer, ICustomerInput } from "../components/customer/customer.model";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ITV_RDX_ACTIONS } from "../redux/actions";
+import { envLoader } from "../utils/envloader";
 
 
 export const api_getCustomersData = createAsyncThunk(
     ITV_RDX_ACTIONS.GET_ALL_CUSTOMERS, async (reqParams: { take: number, skip: number }) => {
         try {
-            const response = await axios.get(`http://192.168.100.229:4000/api/customers/${reqParams.take}/${reqParams.skip}`);
+            const response = await axios.get(`${envLoader.baseURL}/customers/${reqParams.take}/${reqParams.skip}`);
 
             return response.data;
         } catch (error) {
@@ -22,7 +23,7 @@ export const api_CreateNewCustomer = createAsyncThunk(
         try {
             const response = await axios({
                 method: 'POST',
-                url: `http://192.168.100.229:4000/api/customer`,
+                url: `${envLoader.baseURL}/customer`,
                 data: customerData,
             });
             return response.data;
@@ -36,7 +37,7 @@ export const api_searchCustomerByName = createAsyncThunk(
         try {
             const response = await axios({
                 method: 'GET',
-                url: `http://192.168.100.229:4000/api/customer/s/${cusName}`
+                url: `${envLoader.baseURL}/customer/s/${cusName}`
             });
             return response.data;
         } catch (error) {
@@ -49,7 +50,7 @@ export const api_searchCustomerByPhone = createAsyncThunk(
         try {
             const response = await axios({
                 method: 'GET',
-                url: `http://192.168.100.229:4000/api/customer/s/p/${phone}`
+                url: `${envLoader.baseURL}/customer/s/p/${phone}`
             });
             return response.data;
         } catch (error) {
@@ -63,7 +64,7 @@ export async function api_updateCustomer(cusData: ICustomer | null) {
         try {
             const response = await axios({
                 method: 'PUT',
-                url: `http://192.168.100.229:4000/api/customer/${cusData.id}`,
+                url: `${envLoader.baseURL}/customer/${cusData.id}`,
                 data: cusData
             });
             return response;
@@ -76,7 +77,7 @@ export async function api_deleteCustomer(cusId: string) {
     try {
         const response = await axios({
             method: 'DELETE',
-            url: `http://192.168.100.229:4000/api/customer/${cusId}`,
+            url: `${envLoader.baseURL}/customer/${cusId}`,
         });
         return response;
     } catch (error) {
